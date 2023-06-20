@@ -1,1 +1,0 @@
-# LAR-frontend
