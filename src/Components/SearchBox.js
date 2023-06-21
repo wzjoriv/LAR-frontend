@@ -1,30 +1,27 @@
-import "./style.css";
-import React from "react";
+// Textbox.js
+import React, { useState } from 'react';
+import axios from 'axios';
+import './style.css';
 
-export default function SearchBox(props) {
-  function handleChange(event) {
-    props.setSearchLocation(event.target.value);
-  }
+function Textbox() {
+  const [response, setResponse] = useState(null);
 
-  function handleKeyPress(event) {
-    if (event.keyCode === 9) {
-      event.preventDefault();
-      props.setSearchLocation(props.placeholder);
+  const handleClick = async () => {
+    try {
+      const res = await axios.get('<URL>');
+      setResponse(res.data);
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
   return (
-    <div className="searchbox">
-      <input
-        type="text"
-        onChange={handleChange}
-        onKeyDown={handleKeyPress}
-        value={props.searchLocation}
-        name="locationInput"
-        placeholder={props.placeholder}
-        title="Enter the location of interest"
-      />
-      <button type="button" onClick={props.handleSubmit}>🔍</button>
+    <div className="textbox">
+      <input type="text" />
+      <button onClick={handleClick}>Submit</button>
+      {response && <div>{JSON.stringify(response)}</div>}
     </div>
   );
 }
+
+export default Textbox;
