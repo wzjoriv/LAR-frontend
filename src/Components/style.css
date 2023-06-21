@@ -1,5 +1,5 @@
-/* Textbox.css */
-.textbox {
+/* SearchBox.css */
+.searchbox {
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -14,13 +14,13 @@
     border-radius: 9px;
   }
   
-  .textbox input {
+  .searchbox input {
     flex: none;
     order: 0;
     flex-grow: 0;
   }
   
-  .textbox button {
+  .searchbox button {
     background-color: #FFFFFF;
     border: none;
   }
