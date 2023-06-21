@@ -1,23 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import MapViewer from './Components/MapViewer';
+import SearchBar from './Components/SearchBar';
+import React, { useState } from 'react';
 
 function App() {
+
+  const [location, setLocation] = useState({
+    longitude: -70.0,
+    latitude: 40.0,
+    zoom: 14
+  });
+  const [LOIResponse, setLOIResponse] = useState(null); //loi = location of interest
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <MapViewer location={location} setLocation={setLocation} LOIResponse={LOIResponse} />
+      <div className='App-header'>
+        <SearchBar location={location} setLOIResponse={setLOIResponse} />
+        <p>Test: {LOIResponse && <div>{JSON.stringify(LOIResponse)}</div>}</p>
+      </div>
     </div>
   );
 }
