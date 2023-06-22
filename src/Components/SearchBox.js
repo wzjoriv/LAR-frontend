@@ -1,13 +1,18 @@
-import './style.css';
+import "./style.css";
+import React, { useState } from "react";
 
-function SearchBox(props) {
-
+export default function SearchBox(props) {
   return (
     <div className="searchbox">
-      <input type="text" />
-      <button onClick={props.handleSubmit}>Submit</button>
+      <input
+        type="text"
+        onChange={props.handleChange}
+        value={props.searchText}
+        name="cityInput"
+        placeholder="Lafayette, IN"
+        title="Enter the location of interest"
+      />
+      <button type="button" onClick={props.handleSubmit}>Submit</button>
     </div>
   );
 }
-
-export default SearchBox;

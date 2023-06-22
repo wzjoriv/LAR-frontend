@@ -22,5 +22,5 @@
   
   .searchbox button {
     background-color: #FFFFFF;
-    border: none;
+    border-radius: 10px;
   }
