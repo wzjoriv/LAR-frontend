@@ -12,7 +12,7 @@ export default function SearchBox(props) {
         placeholder="Lafayette, IN"
         title="Enter the location of interest"
       />
-      <button>Submit</button>
+      <button type="button" onClick={props.handleSubmit}>🔍</button>
     </div>
   );
 }
