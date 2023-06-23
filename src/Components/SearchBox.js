@@ -1,5 +1,5 @@
 import "./style.css";
-import React, { useState } from "react";
+import React from "react";
 
 export default function SearchBox(props) {
   return (
@@ -12,7 +12,7 @@ export default function SearchBox(props) {
         placeholder="Lafayette, IN"
         title="Enter the location of interest"
       />
-      <button type="button" onClick={props.handleSubmit}>Submit</button>
+      <button>Submit</button>
     </div>
   );
 }
