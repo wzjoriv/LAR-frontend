@@ -12,7 +12,8 @@ export default function SearchBar(props) {
 
   //`http://localhost:5000/adds/Lafayette,IN/0,1,2,3` 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault()
     try {
       const res = await axios.get(
         `http://localhost:5000/adds/${searchText}/1,2`
@@ -24,11 +25,10 @@ export default function SearchBar(props) {
   };
 
   return (
-    <form className="search-bar">
+    <form onSubmit={handleSubmit} className="search-bar">
       <SearchBox
         searchText={searchText}
         setSearchText={setSearchText}
-        handleSubmit={handleSubmit}
         handleChange={handleChange}
       />
     </form>
