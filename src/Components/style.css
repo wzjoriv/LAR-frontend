@@ -4,9 +4,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 6px 35px;
-    gap: 10px;
-    width: 340px;
+    padding: 6px 6px;
+    gap: 5px;
     height: 36px;
     background: #FFFFFF;
     border: 1px solid #000000;
@@ -17,10 +16,18 @@
   .searchbox input {
     flex: none;
     order: 0;
+    width: 300px;
     flex-grow: 0;
+    border: none;
+    font: Tahoma;
+  }
+  
+  .searchbox input:focus {
+    outline: none;
   }
   
   .searchbox button {
     background-color: #FFFFFF;
-    border-radius: 10px;
+    border: none;
+    font-size: large;
   }
