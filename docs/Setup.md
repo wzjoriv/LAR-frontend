@@ -17,7 +17,7 @@ It is expected that all shell commands are executed from the root directory of t
     * [Linux](https://nodejs.org/en/download)
 
 
-### II. Install dependencies
+### II. Install modules
 
 ```bash
 npm install
