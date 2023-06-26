@@ -9,7 +9,8 @@ import React from "react";
 */ 
 export default function ToggleButton(props){
     const styles = {
-        backgroundColor: props.selected ? "#97DAFF" : "transparent",
+        backgroundColor: props.selected ? "#30C5FF" : "transparent",
+        color: props.selected ? "#333" : "#4D5D68",
     }
     return(
         <div
