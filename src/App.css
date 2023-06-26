@@ -4,9 +4,7 @@
 
 .App-header {
   min-height: 100vh;
-  display: flex;
   padding: 5px;
-  flex-direction: row;
   font-size: calc(10px + 2vmin);
   color: rgb(33, 33, 33);
 }
