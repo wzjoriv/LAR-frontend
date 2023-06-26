@@ -2,21 +2,31 @@ import React, { useState } from "react";
 import "./style.css";
 import axios from "axios";
 import SearchBox from "./SearchBox";
+import buttons from "./buttons";
+import ToggleButton from "./ToggleButton";
 
 export default function SearchBar(props) {
-  const [searchText, setSearchText] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [buttonInfo, setButtonInfo] = useState(buttons);
 
   function handleChange(event) {
-    setSearchText(event.target.value);
+    setSearchLocation(event.target.value);
   }
 
-  //`http://localhost:5000/adds/Lafayette,IN/0,1,2,3` 
+  //`http://localhost:5000/adds/Lafayette,IN/1`
+  let searchTargets = "";
+  for (let i = 0; i < buttonInfo.length; i++) {
+    if (buttonInfo[i].selected) {
+      searchTargets = searchTargets + buttonInfo[i].id + ",";
+    }
+  }
+  searchTargets = searchTargets.slice(0, -1);
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
       const res = await axios.get(
-        `http://localhost:5000/adds/${searchText}/1,2`
+        `http://localhost:5000/adds/${searchLocation}/${searchTargets}`
       );
       props.setLOIResponse(res.data);
     } catch (error) {
@@ -24,13 +34,32 @@ export default function SearchBar(props) {
     }
   };
 
+  const ToggleOptions = buttonInfo.map((button) => (
+    <ToggleButton
+      id={button.id}
+      name={button.name}
+      selected={button.selected}
+      changeToggle={changeToggle}
+    />
+  ));
+
+  function changeToggle(key) {
+    setButtonInfo((prevInfo) => {
+      return prevInfo.map((info) => {
+        return info.id === key ? { ...info, selected: !info.selected } : info;
+      });
+    });
+  }
+
   return (
     <form onSubmit={handleSubmit} className="search-bar">
       <SearchBox
-        searchText={searchText}
-        setSearchText={setSearchText}
+        searchLocation={searchLocation}
+        setSearchLocation={setSearchLocation}
         handleChange={handleChange}
+        changeToggle={changeToggle}
       />
+      {ToggleOptions}
     </form>
   );
 }
