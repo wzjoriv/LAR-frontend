@@ -49,6 +49,7 @@
 .search-bar {
   pointer-events: all;
   display: flex;
+  flex-wrap: wrap;
   height: 30px;
   padding: 5px;
   padding-left: 50px;
