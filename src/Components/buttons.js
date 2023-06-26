@@ -1,7 +1,7 @@
 const buttons = [
     {
         id: 0,
-        name: "Aviation Facilities",
+        name: "Aviation",
         selected: false
     },{
         id: 1,
@@ -13,11 +13,11 @@ const buttons = [
         selected: true
     },{
         id: 3,
-        name: "Local Law Enforcement",
+        name: "Law Enforcement",
         selected: false
     },{
         id: 4,
-        name: "Public Schools",
+        name: "Schools",
         selected: false
     }
 ]
