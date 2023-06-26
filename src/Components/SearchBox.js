@@ -7,7 +7,7 @@ export default function SearchBox(props) {
       <input
         type="text"
         onChange={props.handleChange}
-        value={props.searchText}
+        value={props.searchLocation}
         name="cityInput"
         placeholder="Lafayette, IN"
         title="Enter the location of interest"

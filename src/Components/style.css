@@ -30,4 +30,22 @@
     background-color: #FFFFFF;
     border: none;
     font-size: large;
+    cursor: pointer;
+  }
+
+  .toggleButton{
+    border: 1px solid#000000;
+    border-radius: 15px;
+    padding: 4px 8px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+
+  }
+
+  .search-bar{
+    display: flex;
+    height: 30px;
+    padding: 5px;
+    align-items: center;
   }
