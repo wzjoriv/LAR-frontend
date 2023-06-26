@@ -1,23 +1,23 @@
 const buttons = [
     {
         id: 0,
-        name: "Aviation",
+        name: "✈️ Aviation",
         selected: false
     },{
         id: 1,
-        name: "Fire Stations",
+        name: "🚒 Fire Stations",
         selected: false
     },{
         id: 2,
-        name: "Hospitals",
+        name: "🏥 Hospitals",
         selected: true
     },{
         id: 3,
-        name: "Law Enforcement",
+        name: "👮 Law Enforcement",
         selected: false
     },{
         id: 4,
-        name: "Schools",
+        name: "🏫 Schools",
         selected: false
     }
 ]
