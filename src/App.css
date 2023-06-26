@@ -4,6 +4,9 @@
 
 .App-header {
   min-height: 100vh;
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
   padding: 5px;
   font-size: calc(10px + 2vmin);
   color: rgb(33, 33, 33);
