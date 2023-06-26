@@ -52,7 +52,7 @@
   flex-wrap: wrap;
   height: 30px;
   padding: 5px;
-  padding-left: 50px;
+  margin-left: 45px;
   gap: 5px;
   align-items: center;
 }
