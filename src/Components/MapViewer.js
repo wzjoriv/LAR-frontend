@@ -53,7 +53,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
         );
       }
     }
-  }, [location, setLocation]);
+  }, [location, setLocation, isProgrammaticMove]);
 
   useEffect(() => {
 
