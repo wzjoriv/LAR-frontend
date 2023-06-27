@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import L from 'leaflet';
 import './style.css';
 
@@ -18,7 +18,7 @@ function MapViewer(props) {
     return () => {
       map.remove();
     };
-  }, []);
+  }, [props.location]);
 
   return (
     <div id="map-container">
