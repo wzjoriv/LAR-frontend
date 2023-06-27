@@ -1,24 +1,76 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import './style.css';
 
-function MapViewer(props) {
+function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
+  const mapRef = useRef(null);
+
   useEffect(() => {
-    var map = L.map('map-viewer').setView(
-      [props.location['latitude'], props.location['longitude']],
-      props.location['zoom']
-    );
+    if (!mapRef.current) {
+      isProgrammaticMove.current = true;
+      mapRef.current = L.map('map-viewer').setView(
+        [location['latitude'], location['longitude']],
+        location['zoom']
+      );
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(mapRef.current);
 
-    return () => {
-      map.remove();
-    };
-  }, [props.location]);
+      mapRef.current.on('moveend', function () {
+        if (isProgrammaticMove.current) {
+          isProgrammaticMove.current = false;
+          return;
+        }
+
+        console.log(mapRef.current.getCenter().toString());
+
+        //Get radius + execute API call
+
+        setLocation({
+          longitude: mapRef.current.getCenter().lng,
+          latitude: mapRef.current.getCenter().lat,
+          radius: 1500.0, //meters
+          zoom: mapRef.current.getZoom(),
+        });
+
+        //Render heatmap
+
+      });
+    } else {
+      const currentCenter = mapRef.current.getCenter();
+      // const currentZoom = mapRef.current.getZoom();
+      if (
+        currentCenter.lat !== location.latitude ||
+        currentCenter.lng !== location.longitude
+      ) {
+        isProgrammaticMove.current = true;
+        mapRef.current.setView(
+          [location['latitude'], location['longitude']],
+          location['zoom']
+        );
+      }
+    }
+  }, [location, setLocation]);
+
+  useEffect(() => {
+
+    if (LOIResponse) {
+
+      //Get zoom from radius
+
+      setLocation({
+        longitude: LOIResponse.search.longitude,
+        latitude: LOIResponse.search.latitude,
+        radius: LOIResponse.search.radius, //meters
+        zoom: Math.ceil(14),
+      });
+
+      //Render heatmap
+    }
+  }, [LOIResponse, setLocation]);
 
   return (
     <div id="map-container">
