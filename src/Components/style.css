@@ -1,56 +1,73 @@
 /* SearchBox.css */
 .searchbox {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 6px 6px;
-    gap: 5px;
-    height: 36px;
-    background: #FFFFFF;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 9px;
-  }
-  
-  .searchbox input {
-    flex: none;
-    order: 0;
-    width: 300px;
-    flex-grow: 0;
-    border: none;
-    font: Tahoma;
-  }
-  
-  .searchbox input:focus {
-    outline: none;
-  }
-  
-  .searchbox button {
-    background-color: #FFFFFF;
-    border: none;
-    font-size: large;
-    cursor: pointer;
-  }
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 6px;
+  gap: 5px;
+  height: 36px;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+}
 
-  .toggleButton{
-    border: 1px solid#000000;
-    border-radius: 15px;
-    padding: 4px 8px;
-    text-align: center;
-    font-size: 16px;
-    cursor: pointer;
-    color: #4D5D68;
-    text-align: center;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+.searchbox input {
+  flex: none;
+  order: 0;
+  width: 300px;
+  flex-grow: 0;
+  border: none;
+  font: Tahoma;
+}
 
-  }
+.searchbox input:focus {
+  outline: none;
+}
 
-  .search-bar{
-    display: flex;
-    height: 30px;
-    padding: 5px;
-    gap: 5px;
-    align-items: center;
-  }
-  
+.searchbox button {
+  background-color: #FFFFFF;
+  border: none;
+  font-size: large;
+  cursor: pointer;
+}
+
+.toggleButton {
+  border: 1px solid#000000;
+  border-radius: 15px;
+  padding: 4px 8px;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  color: #4D5D68;
+  text-align: center;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+
+}
+
+.search-bar {
+  pointer-events: all;
+  display: flex;
+  flex-wrap: wrap;
+  height: 30px;
+  padding: 10px;
+  margin-left: 45px;
+  gap: 5px;
+  align-items: center;
+}
+
+#map-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#map-viewer {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}

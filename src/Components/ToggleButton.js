@@ -6,20 +6,20 @@ import React from "react";
 2: Hospitals
 3: Local Law Enforcement
 4: Public Schools
-*/ 
-export default function ToggleButton(props){
+*/
+export default function ToggleButton(props) {
     const styles = {
-        backgroundColor: props.selected ? "#30C5FF" : "transparent",
+        backgroundColor: props.selected ? "#30C5FF" : "white",
         color: props.selected ? "#333" : "#4D5D68",
     }
-    return(
+    return (
         <div
             style={styles}
             className="toggleButton"
             id={props.id}
             key={props.id}
-            onClick={()=>props.changeToggle(props.id)}
-        >{props.name} 
+            onClick={() => props.changeToggle(props.id)}
+        >{props.name}
         </div>
     )
 }

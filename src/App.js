@@ -1,23 +1,24 @@
 import './App.css';
 import MapViewer from './Components/MapViewer';
 import SearchBar from './Components/SearchBar';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 function App() {
 
   const [location, setLocation] = useState({
-    longitude: -70.0,
-    latitude: 40.0,
+    longitude: -71.1642646,
+    latitude: 42.7002117,
+    radius: 9000, //meters
     zoom: 14
   });
   const [LOIResponse, setLOIResponse] = useState(null); //loi = location of interest
+  const isProgrammaticMove = useRef(false);
 
   return (
     <div className="App">
-      <MapViewer location={location} setLocation={setLocation} LOIResponse={LOIResponse} />
+      <MapViewer location={location} isProgrammaticMove={isProgrammaticMove} setLocation={setLocation} LOIResponse={LOIResponse} />
       <div className='App-header'>
-        <SearchBar location={location} setLOIResponse={setLOIResponse} />
-        <p>Test: {LOIResponse && <div>{JSON.stringify(LOIResponse)}</div>}</p>
+        <SearchBar location={location} isProgrammaticMove={isProgrammaticMove} setLOIResponse={setLOIResponse} />
       </div>
     </div>
   );
