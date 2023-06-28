@@ -28,7 +28,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
 
         console.log(mapRef.current.getCenter().toString());
 
-        //Get radius + execute API call
+        // Get radius + execute API call
 
         setLocation({
           longitude: mapRef.current.getCenter().lng,
@@ -37,7 +37,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
           zoom: mapRef.current.getZoom(),
         });
 
-        //Render heatmap
+        // Render heatmap
 
       });
     } else {
@@ -60,7 +60,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
 
     if (LOIResponse) {
 
-      //Get zoom from radius
+      // Get zoom from radius
 
       setLocation({
         longitude: LOIResponse.search.longitude,
@@ -69,7 +69,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
         zoom: Math.ceil(14),
       });
 
-      //Render heatmap
+      // Render heatmap
     }
   }, [LOIResponse, setLocation]);
 
