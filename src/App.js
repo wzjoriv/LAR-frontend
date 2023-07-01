@@ -16,7 +16,7 @@ function App() {
 
   return (
     <div className="App">
-      <MapViewer location={location} isProgrammaticMove={isProgrammaticMove} setLocation={setLocation} LOIResponse={LOIResponse} />
+      <MapViewer location={location} isProgrammaticMove={isProgrammaticMove} setLocation={setLocation} LOIResponse={LOIResponse}/>
       <div className='App-header'>
         <SearchBar location={location} isProgrammaticMove={isProgrammaticMove} setLOIResponse={setLOIResponse} />
       </div>
