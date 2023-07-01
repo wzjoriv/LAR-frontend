@@ -84,8 +84,8 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
       });
       locationChangedByMoveEnd.current = false;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+
+  }, [location, getLocationData, handleMoveEnd, isProgrammaticMove]);
 
   useEffect(() => {
 
@@ -108,8 +108,8 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
       console.log("Programmatic")
       renderHeatmap(L, LOIResponse);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [LOIResponse]);
+    
+  }, [LOIResponse, setLocation]);
 
   return (
     <div id="map-container">
