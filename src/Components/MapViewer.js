@@ -39,7 +39,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
       radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
       zoom: mapRef.current.getZoom(),
     });
-  }, [setLocation, isProgrammaticMove]);
+  }, [setLocation, isProgrammaticMove, mapRef]);
 
   useEffect(() => {
 
@@ -85,7 +85,7 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
       locationChangedByMoveEnd.current = false;
     }
 
-  }, [location, getLocationData, handleMoveEnd, isProgrammaticMove]);
+  }, [location, getLocationData, handleMoveEnd, mapRef, isProgrammaticMove]);
 
   useEffect(() => {
 
@@ -108,8 +108,8 @@ function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
       console.log("Programmatic")
       renderHeatmap(L, LOIResponse);
     }
-    
-  }, [LOIResponse, setLocation]);
+
+  }, [LOIResponse, setLocation, mapRef]);
 
   return (
     <div id="map-container">
