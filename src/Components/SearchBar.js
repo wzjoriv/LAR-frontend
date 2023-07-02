@@ -24,9 +24,10 @@ export default function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let searchType = /[\d.]/.test(searchLocation) ? "locs" : "adds"
     try {
       const res = await axios.get(
-        `http://localhost:5000/adds/${searchLocation}/${searchTargets}`
+        `http://localhost:5000/${searchType}/${searchLocation}/${searchTargets}`
       );
       props.setLOIResponse(res.data);
     } catch (error) {
