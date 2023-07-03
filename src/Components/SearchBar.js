@@ -54,11 +54,11 @@ export default function SearchBar(props) {
 
   React.useEffect(
     function () {
-      if (props.locationChangedByUser.current){
+      if (!props.isProgrammaticMove.current){
         setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
       };
     },
-    [props.location, props.locationChangedByUser, setSearchLocation]
+    [props.location, props.isProgrammaticMove, setSearchLocation]
   );
 
   return (
