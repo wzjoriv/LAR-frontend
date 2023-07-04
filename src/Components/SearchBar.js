@@ -54,16 +54,13 @@ export default function SearchBar(props) {
     });
   }
 
-  React.useEffect(
-    function () {
-      console.log(props.isProgrammaticMove.current);
-      if (!props.isProgrammaticMove.current) {
-        setSearchLocation(
-          `${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`
-        );
-      }
-    },
-    [props.location, props.isProgrammaticMove, setSearchLocation]
+  React.useEffect(() => {
+      if (props.locationChangedByInteraction.current) {
+        setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
+      };
+      
+			props.locationChangedByInteraction.current = false;
+    }, [props.location, props.locationChangedByInteraction, setSearchLocation]
   );
 
   return (
