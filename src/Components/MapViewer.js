@@ -81,7 +81,6 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 				// Render heatmap; Send request to worker
 				renderHeatmap(L, data);
 			});
-			locationChangedByUser.current = false;
 		}
 
 	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByUser, isProgrammaticMove]);
