@@ -77,7 +77,6 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 		}
 
 		if (locationChangedByUser.current) {
-			console.log("Not Programmatic")
 			getLocationData().then(data => {
 				// Render heatmap; Send request to worker
 				renderHeatmap(L, data);
@@ -105,8 +104,6 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 				radius: LOIResponse.search.radius, //meters
 				zoom: mapRef.current.getBoundsZoom(bounds)
 			});
-
-			console.log("Programmatic")
 			renderHeatmap(L, LOIResponse);
 		}
 
