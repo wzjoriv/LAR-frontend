@@ -52,13 +52,13 @@ export default function SearchBar(props) {
     });
   }
 
-  React.useEffect(
-    function () {
-      if (props.locationChangedByUser.current){
+  React.useEffect(() => {
+      if (props.locationChangedByUser.current) {
         setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
       };
-    },
-    [props.location, props.locationChangedByUser, setSearchLocation]
+      
+			props.locationChangedByUser.current = false;
+    }, [props.location, props.locationChangedByUser, setSearchLocation]
   );
 
   return (
