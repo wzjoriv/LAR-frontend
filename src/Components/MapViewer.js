@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import axios from "axios";
 import './style.css';
-import renderHeatmap from './heatmap.worker.js';
+import renderHeatmap from './heatmap.js';
 
 function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }) {
 	const mapRef = useRef(null);
