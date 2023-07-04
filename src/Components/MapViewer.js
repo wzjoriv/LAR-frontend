@@ -4,7 +4,7 @@ import axios from "axios";
 import './style.css';
 import renderHeatmap from './heatmap.js';
 
-function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }) {
+function MapViewer({ location, LOIResponse, setLocation, locationChangedByInteraction }) {
 	const mapRef = useRef(null);
   const isProgrammaticMove = useRef(false);
 
@@ -32,14 +32,14 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 		let bounds = mapRef.current.getBounds();
 		let center = mapRef.current.getCenter();
 
-		locationChangedByUser.current = true;
+		locationChangedByInteraction.current = true;
 		setLocation({
 			longitude: center.lng,
 			latitude: center.lat,
 			radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
 			zoom: mapRef.current.getZoom(),
 		});
-	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByUser]);
+	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
 
 	useEffect(() => {
 
@@ -76,24 +76,24 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 			}
 		}
 
-		if (locationChangedByUser.current) {
+		if (locationChangedByInteraction.current) {
 			getLocationData().then(data => {
 				// Render heatmap; Send request to worker
 				renderHeatmap(L, data);
 			});
 		}
 
-	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByUser, isProgrammaticMove]);
+	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
 
 	useEffect(() => {
-		if (locationChangedByUser.current) {
+		if (locationChangedByInteraction.current) {
 			const timeoutId = setTimeout(() => {
-				locationChangedByUser.current = false;
+				locationChangedByInteraction.current = false;
 			}, 2000);
 	
 			return () => clearTimeout(timeoutId);
 		}
-	}, [locationChangedByUser]);
+	}, [locationChangedByInteraction]);
 	
 
 	useEffect(() => {

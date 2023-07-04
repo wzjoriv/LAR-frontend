@@ -12,13 +12,13 @@ function App() {
     zoom: 14
   });
   const [LOIResponse, setLOIResponse] = useState(null); //loi = location of interest
-	const locationChangedByUser = useRef(false);
+	const locationChangedByInteraction = useRef(false);
 
   return (
     <div className="App">
-      <MapViewer location={location} locationChangedByUser={locationChangedByUser} setLocation={setLocation} LOIResponse={LOIResponse}/>
+      <MapViewer location={location} locationChangedByInteraction={locationChangedByInteraction} setLocation={setLocation} LOIResponse={LOIResponse}/>
       <div className='App-header'>
-        <SearchBar location={location} locationChangedByUser={locationChangedByUser} setLOIResponse={setLOIResponse} />
+        <SearchBar location={location} locationChangedByInteraction={locationChangedByInteraction} setLOIResponse={setLOIResponse} />
       </div>
     </div>
   );
