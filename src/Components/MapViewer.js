@@ -78,8 +78,7 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 
 		if (locationChangedByUser.current) {
 			getLocationData().then(data => {
-				// Render heatmap; Send request to worker
-				renderHeatmap(L, data);
+				renderHeatmap(mapRef.current, data);
 			});
 		}
 
@@ -114,7 +113,7 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 				radius: LOIResponse.search.radius, //meters
 				zoom: mapRef.current.getBoundsZoom(bounds)
 			});
-			renderHeatmap(L, LOIResponse);
+			renderHeatmap(mapRef.current, LOIResponse);
 		}
 
 	}, [LOIResponse, setLocation, mapRef, isProgrammaticMove]);
