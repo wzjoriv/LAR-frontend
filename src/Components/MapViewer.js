@@ -86,6 +86,17 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByUser, isProgrammaticMove]);
 
 	useEffect(() => {
+		if (locationChangedByUser.current) {
+			const timeoutId = setTimeout(() => {
+				locationChangedByUser.current = false;
+			}, 2000);
+	
+			return () => clearTimeout(timeoutId);
+		}
+	}, [locationChangedByUser]);
+	
+
+	useEffect(() => {
 
 		if (LOIResponse) {
 
