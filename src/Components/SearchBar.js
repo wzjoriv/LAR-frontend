@@ -55,12 +55,12 @@ export default function SearchBar(props) {
   }
 
   React.useEffect(() => {
-      if (props.locationChangedByUser.current) {
+      if (props.locationChangedByInteraction.current) {
         setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
       };
       
-			props.locationChangedByUser.current = false;
-    }, [props.location, props.locationChangedByUser, setSearchLocation]
+			props.locationChangedByInteraction.current = false;
+    }, [props.location, props.locationChangedByInteraction, setSearchLocation]
   );
 
   return (
