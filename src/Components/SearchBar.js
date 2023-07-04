@@ -24,9 +24,10 @@ export default function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation) ? "locs" : "adds";
     try {
       const res = await axios.get(
-        `http://localhost:5000/adds/${searchLocation}/${searchTargets}`
+        `http://localhost:5000/${searchType}/${searchLocation}/${searchTargets}`
       );
       props.setLOIResponse(res.data);
     } catch (error) {
@@ -50,6 +51,15 @@ export default function SearchBar(props) {
       });
     });
   }
+
+  React.useEffect(() => {
+      if (props.locationChangedByUser.current) {
+        setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
+      };
+      
+			props.locationChangedByUser.current = false;
+    }, [props.location, props.locationChangedByUser, setSearchLocation]
+  );
 
   return (
     <form onSubmit={handleSubmit} className="search-bar">

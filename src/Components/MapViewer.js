@@ -78,13 +78,22 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 
 		if (locationChangedByUser.current) {
 			getLocationData().then(data => {
-				// Render heatmap; Send request to worker
-				renderHeatmap(L, data);
+				renderHeatmap(mapRef.current, data);
 			});
-			locationChangedByUser.current = false;
 		}
 
 	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByUser, isProgrammaticMove]);
+
+	useEffect(() => {
+		if (locationChangedByUser.current) {
+			const timeoutId = setTimeout(() => {
+				locationChangedByUser.current = false;
+			}, 2000);
+	
+			return () => clearTimeout(timeoutId);
+		}
+	}, [locationChangedByUser]);
+	
 
 	useEffect(() => {
 
@@ -104,7 +113,7 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 				radius: LOIResponse.search.radius, //meters
 				zoom: mapRef.current.getBoundsZoom(bounds)
 			});
-			renderHeatmap(L, LOIResponse);
+			renderHeatmap(mapRef.current, LOIResponse);
 		}
 
 	}, [LOIResponse, setLocation, mapRef, isProgrammaticMove]);
