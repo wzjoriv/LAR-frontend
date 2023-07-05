@@ -1,83 +1,129 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
+import axios from "axios";
 import './style.css';
+import renderHeatmap from './heatmap.js';
 
-function MapViewer({ location, LOIResponse, setLocation, isProgrammaticMove }) {
-  const mapRef = useRef(null);
+function MapViewer({ location, LOIResponse, setLocation, locationChangedByInteraction }) {
+	const mapRef = useRef(null);
+  const isProgrammaticMove = useRef(false);
 
-  useEffect(() => {
-    if (!mapRef.current) {
-      isProgrammaticMove.current = true;
-      mapRef.current = L.map('map-viewer').setView(
-        [location['latitude'], location['longitude']],
-        location['zoom']
-      );
+	const getLocationData = useCallback(async (event) => {
+		console.log(location);
+		try {
+			const res = await axios.get(
+				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
+			);
 
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        minZoom: 13,
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(mapRef.current);
+			return res.data;
+		} catch (error) {
+			console.error(error);
 
-      mapRef.current.on('moveend', function () {
-        if (isProgrammaticMove.current) {
-          isProgrammaticMove.current = false;
-          return;
-        }
+			return null;
+		}
+	}, [location]);
 
-        console.log(mapRef.current.getCenter().toString());
+	const handleMoveEnd = useCallback(() => {
+		if (isProgrammaticMove.current) {
+			isProgrammaticMove.current = false;
+			return;
+		}
 
-        //Get radius + execute API call
+		let bounds = mapRef.current.getBounds();
+		let center = mapRef.current.getCenter();
 
-        setLocation({
-          longitude: mapRef.current.getCenter().lng,
-          latitude: mapRef.current.getCenter().lat,
-          radius: 1500.0, //meters
-          zoom: mapRef.current.getZoom(),
-        });
+		locationChangedByInteraction.current = true;
+		setLocation({
+			longitude: center.lng,
+			latitude: center.lat,
+			radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
+			zoom: mapRef.current.getZoom(),
+		});
+	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
 
-        //Render heatmap
+	useEffect(() => {
 
-      });
-    } else {
-      const currentCenter = mapRef.current.getCenter();
-      // const currentZoom = mapRef.current.getZoom();
-      if (
-        currentCenter.lat !== location.latitude ||
-        currentCenter.lng !== location.longitude
-      ) {
-        isProgrammaticMove.current = true;
-        mapRef.current.setView(
-          [location['latitude'], location['longitude']],
-          location['zoom']
-        );
-      }
-    }
-  }, [location, setLocation, isProgrammaticMove]);
+		if (!mapRef.current) {
+			isProgrammaticMove.current = true;
+			mapRef.current = L.map('map-viewer').setView(
+				[location['latitude'], location['longitude']],
+				location['zoom']
+			);
 
-  useEffect(() => {
+			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				maxZoom: 19,
+				minZoom: 13,
+				attribution:
+					'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			}).addTo(mapRef.current);
 
-    if (LOIResponse) {
+			mapRef.current.on('moveend', handleMoveEnd);
+		} else {
+			const currentCenter = mapRef.current.getCenter();
+			const currentZoom = mapRef.current.getZoom();
 
-      //Get zoom from radius
+			if (
+				currentCenter.lat !== location.latitude ||
+				currentCenter.lng !== location.longitude ||
+				currentZoom !== location.zoom
+			) {
 
-      setLocation({
-        longitude: LOIResponse.search.longitude,
-        latitude: LOIResponse.search.latitude,
-        radius: LOIResponse.search.radius, //meters
-        zoom: Math.ceil(14),
-      });
+				isProgrammaticMove.current = true;
+				mapRef.current.setView(
+					[location['latitude'], location['longitude']],
+					location['zoom']
+				);
+			}
+		}
 
-      //Render heatmap
-    }
-  }, [LOIResponse, setLocation]);
+		if (locationChangedByInteraction.current) {
+			getLocationData().then(data => {
+				// Render heatmap; Send request to worker
+				renderHeatmap(L, data);
+			});
+		}
 
-  return (
-    <div id="map-container">
-      <div id="map-viewer"></div>
-    </div>
-  );
+	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
+
+	useEffect(() => {
+		if (locationChangedByInteraction.current) {
+			const timeoutId = setTimeout(() => {
+				locationChangedByInteraction.current = false;
+			}, 2000);
+	
+			return () => clearTimeout(timeoutId);
+		}
+	}, [locationChangedByInteraction]);
+	
+
+	useEffect(() => {
+
+		if (LOIResponse) {
+
+			let latLngLOIs = Object.values(LOIResponse.dbs).flat();
+			latLngLOIs = latLngLOIs.map(entry =>
+				[entry.geometry.coordinates[1], entry.geometry.coordinates[0]]
+			);
+
+			const bounds = L.latLngBounds(latLngLOIs);
+
+			isProgrammaticMove.current = true;
+			setLocation({
+				longitude: LOIResponse.search.longitude,
+				latitude: LOIResponse.search.latitude,
+				radius: LOIResponse.search.radius, //meters
+				zoom: mapRef.current.getBoundsZoom(bounds)
+			});
+			renderHeatmap(L, LOIResponse);
+		}
+
+	}, [LOIResponse, setLocation, mapRef, isProgrammaticMove]);
+
+	return (
+		<div id="map-container">
+			<div id="map-viewer"></div>
+		</div>
+	);
 }
 
-export default MapViewer;
+export default React.memo(MapViewer);
