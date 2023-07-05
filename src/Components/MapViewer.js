@@ -9,8 +9,8 @@ function MapViewer({ location, LOIResponse, heatmapOn, setLocation, locationChan
 	const isProgrammaticMove = useRef(false);
 
 	useEffect(() => {
-		toggleHeatmap(heatmapOn, mapRef)
-	}, [heatmapOn]);
+		toggleHeatmap(heatmapOn, mapRef.current)
+	}, [heatmapOn, mapRef]);
 
 	const getLocationData = useCallback(async (event) => {
 		try {
