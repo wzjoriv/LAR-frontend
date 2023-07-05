@@ -2,27 +2,21 @@ import React, { useState } from "react";
 import "./style.css";
 import axios from "axios";
 import SearchBox from "./SearchBox";
-import buttons from "./buttons";
 import ToggleButton from "./ToggleButton";
+import makeSearchTargets from "./makeSearchTargets";
 
 export default function SearchBar(props) {
   const [searchLocation, setSearchLocation] = useState("");
-  const [buttonInfo, setButtonInfo] = useState(buttons);
   function handleChange(event) {
     setSearchLocation(event.target.value);
   }
 
   //`http://localhost:5000/adds/Lafayette,IN/1`
-  let searchTargets = "";
-  for (let i = 0; i < buttonInfo.length; i++) {
-    if (buttonInfo[i].selected) {
-      searchTargets = searchTargets + buttonInfo[i].id + ",";
-    }
-  }
-  searchTargets = searchTargets.slice(0, -1);
+  let searchTargets = makeSearchTargets(props.buttonInfo);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(searchTargets);
     let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation)
       ? "locs"
       : "adds";
@@ -36,7 +30,15 @@ export default function SearchBar(props) {
     }
   };
 
-  const ToggleOptions = buttonInfo.map((button) => (
+  function changeToggle(key) {
+    props.setButtonInfo((prevInfo) => {
+      return prevInfo.map((info) => {
+        return info.id === key ? { ...info, selected: !info.selected } : info;
+      });
+    });
+  }
+
+  const ToggleOptions = props.buttonInfo.map((button) => (
     <ToggleButton
       id={button.id}
       name={button.name}
@@ -44,14 +46,6 @@ export default function SearchBar(props) {
       changeToggle={changeToggle}
     />
   ));
-
-  function changeToggle(key) {
-    setButtonInfo((prevInfo) => {
-      return prevInfo.map((info) => {
-        return info.id === key ? { ...info, selected: !info.selected } : info;
-      });
-    });
-  }
 
   React.useEffect(() => {
     if (props.locationChangedByInteraction.current) {
