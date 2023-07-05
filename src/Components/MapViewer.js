@@ -1,129 +1,138 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import L from 'leaflet';
+import React, { useEffect, useRef, useCallback } from "react";
+import L from "leaflet";
 import axios from "axios";
-import './style.css';
-import renderHeatmap from './heatmap.js';
+import "./style.css";
+import renderHeatmap from "./heatmap.js";
 
-function MapViewer({ location, LOIResponse, setLocation, locationChangedByInteraction }) {
-	const mapRef = useRef(null);
+function MapViewer({
+  location,
+  LOIResponse,
+  setLocation,
+  locationChangedByInteraction,
+}) {
+  const mapRef = useRef(null);
   const isProgrammaticMove = useRef(false);
 
-	const getLocationData = useCallback(async (event) => {
-		console.log(location);
-		try {
-			const res = await axios.get(
-				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
-			);
+  const getLocationData = useCallback(
+    async (event) => {
+      console.log(location);
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
+        );
 
-			return res.data;
-		} catch (error) {
-			console.error(error);
+        return res.data;
+      } catch (error) {
+        console.error(error);
 
-			return null;
-		}
-	}, [location]);
+        return null;
+      }
+    },
+    [location]
+  );
 
-	const handleMoveEnd = useCallback(() => {
-		if (isProgrammaticMove.current) {
-			isProgrammaticMove.current = false;
-			return;
-		}
+  const handleMoveEnd = useCallback(() => {
+    if (isProgrammaticMove.current) {
+      isProgrammaticMove.current = false;
+      return;
+    }
 
-		let bounds = mapRef.current.getBounds();
-		let center = mapRef.current.getCenter();
+    let bounds = mapRef.current.getBounds();
+    let center = mapRef.current.getCenter();
 
-		locationChangedByInteraction.current = true;
-		setLocation({
-			longitude: center.lng,
-			latitude: center.lat,
-			radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
-			zoom: mapRef.current.getZoom(),
-		});
-	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
+    locationChangedByInteraction.current = true;
+    setLocation({
+      longitude: center.lng,
+      latitude: center.lat,
+      radius: center.distanceTo(bounds.getNorthWest()) / 2 + 1000, //meters
+      zoom: mapRef.current.getZoom(),
+    });
+  }, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
 
-	useEffect(() => {
+  useEffect(() => {
+    if (!mapRef.current) {
+      isProgrammaticMove.current = true;
+      mapRef.current = L.map("map-viewer").setView(
+        [location["latitude"], location["longitude"]],
+        location["zoom"]
+      );
 
-		if (!mapRef.current) {
-			isProgrammaticMove.current = true;
-			mapRef.current = L.map('map-viewer').setView(
-				[location['latitude'], location['longitude']],
-				location['zoom']
-			);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        minZoom: 13,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(mapRef.current);
 
-			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom: 19,
-				minZoom: 13,
-				attribution:
-					'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-			}).addTo(mapRef.current);
+      mapRef.current.on("moveend", handleMoveEnd);
+    } else {
+      const currentCenter = mapRef.current.getCenter();
+      const currentZoom = mapRef.current.getZoom();
 
-			mapRef.current.on('moveend', handleMoveEnd);
-		} else {
-			const currentCenter = mapRef.current.getCenter();
-			const currentZoom = mapRef.current.getZoom();
+      if (
+        currentCenter.lat !== location.latitude ||
+        currentCenter.lng !== location.longitude ||
+        currentZoom !== location.zoom
+      ) {
+        isProgrammaticMove.current = true;
+        mapRef.current.setView(
+          [location["latitude"], location["longitude"]],
+          location["zoom"]
+        );
+      }
+    }
 
-			if (
-				currentCenter.lat !== location.latitude ||
-				currentCenter.lng !== location.longitude ||
-				currentZoom !== location.zoom
-			) {
+    if (locationChangedByInteraction.current) {
+      getLocationData().then((data) => {
+        // Render heatmap; Send request to worker
+        renderHeatmap(L, data);
+      });
+    }
+  }, [
+    location,
+    getLocationData,
+    handleMoveEnd,
+    mapRef,
+    locationChangedByInteraction,
+    isProgrammaticMove,
+  ]);
 
-				isProgrammaticMove.current = true;
-				mapRef.current.setView(
-					[location['latitude'], location['longitude']],
-					location['zoom']
-				);
-			}
-		}
+  useEffect(() => {
+    if (locationChangedByInteraction.current) {
+      const timeoutId = setTimeout(() => {
+        locationChangedByInteraction.current = false;
+      }, 2000);
 
-		if (locationChangedByInteraction.current) {
-			getLocationData().then(data => {
-				// Render heatmap; Send request to worker
-				renderHeatmap(L, data);
-			});
-		}
+      return () => clearTimeout(timeoutId);
+    }
+  }, [locationChangedByInteraction]);
 
-	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
+  useEffect(() => {
+    if (LOIResponse) {
+      let latLngLOIs = Object.values(LOIResponse.dbs).flat();
+      latLngLOIs = latLngLOIs.map((entry) => [
+        entry.geometry.coordinates[1],
+        entry.geometry.coordinates[0],
+      ]);
 
-	useEffect(() => {
-		if (locationChangedByInteraction.current) {
-			const timeoutId = setTimeout(() => {
-				locationChangedByInteraction.current = false;
-			}, 2000);
-	
-			return () => clearTimeout(timeoutId);
-		}
-	}, [locationChangedByInteraction]);
-	
+      const bounds = L.latLngBounds(latLngLOIs);
 
-	useEffect(() => {
+      isProgrammaticMove.current = true;
+      setLocation({
+        longitude: LOIResponse.search.longitude,
+        latitude: LOIResponse.search.latitude,
+        radius: LOIResponse.search.radius, //meters
+        zoom: mapRef.current.getBoundsZoom(bounds),
+      });
+      renderHeatmap(L, LOIResponse);
+    }
+  }, [LOIResponse, setLocation, mapRef, isProgrammaticMove]);
 
-		if (LOIResponse) {
-
-			let latLngLOIs = Object.values(LOIResponse.dbs).flat();
-			latLngLOIs = latLngLOIs.map(entry =>
-				[entry.geometry.coordinates[1], entry.geometry.coordinates[0]]
-			);
-
-			const bounds = L.latLngBounds(latLngLOIs);
-
-			isProgrammaticMove.current = true;
-			setLocation({
-				longitude: LOIResponse.search.longitude,
-				latitude: LOIResponse.search.latitude,
-				radius: LOIResponse.search.radius, //meters
-				zoom: mapRef.current.getBoundsZoom(bounds)
-			});
-			renderHeatmap(L, LOIResponse);
-		}
-
-	}, [LOIResponse, setLocation, mapRef, isProgrammaticMove]);
-
-	return (
-		<div id="map-container">
-			<div id="map-viewer"></div>
-		</div>
-	);
+  return (
+    <div id="map-container">
+      <div id="map-viewer"></div>
+    </div>
+  );
 }
 
 export default React.memo(MapViewer);
