@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import L from 'leaflet';
+import React, { useEffect, useRef, useCallback } from "react";
+import L from "leaflet";
 import axios from "axios";
 import './style.css';
 import { renderHeatmap, toggleHeatmap } from './heatmap.js';
