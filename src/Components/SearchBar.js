@@ -8,7 +8,6 @@ import ToggleButton from "./ToggleButton";
 export default function SearchBar(props) {
   const [searchLocation, setSearchLocation] = useState("");
   const [buttonInfo, setButtonInfo] = useState(buttons);
-
   function handleChange(event) {
     setSearchLocation(event.target.value);
   }
@@ -55,13 +54,18 @@ export default function SearchBar(props) {
   }
 
   React.useEffect(() => {
-      if (props.locationChangedByInteraction.current) {
-        setSearchLocation(`${props.location.latitude},${props.location.longitude},${props.location.radius}`)
-      };
-      
-			props.locationChangedByInteraction.current = false;
-    }, [props.location, props.locationChangedByInteraction, setSearchLocation]
-  );
+    if (props.locationChangedByInteraction.current) {
+      let numDecimals = -1 * (11 - props.location.zoom);
+      setSearchLocation(
+        `${props.location.latitude.toFixed(
+          numDecimals
+        )}, ${props.location.longitude.toFixed(
+          numDecimals
+        )}, ${props.location.radius.toFixed(numDecimals)}`
+      );
+    }
+    props.locationChangedByInteraction.current = false;
+  }, [props.location, props.locationChangedByInteraction, setSearchLocation]);
 
   return (
     <form onSubmit={handleSubmit} className="search-bar">
