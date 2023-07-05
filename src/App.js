@@ -1,10 +1,10 @@
-import './App.css';
-import MapViewer from './Components/MapViewer';
-import SearchBar from './Components/SearchBar';
-import React, { useState, useRef } from 'react';
+import "./App.css";
+import MapViewer from "./Components/MapViewer";
+import SearchBar from "./Components/SearchBar";
+import React, { useState, useRef } from "react";
+import buttons from "./Components/buttons.js";
 
 function App() {
-
   const [location, setLocation] = useState({
     longitude: -86.8831443,
     latitude: 40.41731893,
