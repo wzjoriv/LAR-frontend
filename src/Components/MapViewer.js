@@ -2,14 +2,17 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import L from 'leaflet';
 import axios from "axios";
 import './style.css';
-import renderHeatmap from './heatmap.js';
+import { renderHeatmap, toggleHeatmap } from './heatmap.js';
 
-function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }) {
+function MapViewer({ location, LOIResponse, heatmapOn, setLocation, locationChangedByUser }) {
 	const mapRef = useRef(null);
-  const isProgrammaticMove = useRef(false);
+	const isProgrammaticMove = useRef(false);
+
+	useEffect(() => {
+		toggleHeatmap(heatmapOn, mapRef)
+	}, [heatmapOn]);
 
 	const getLocationData = useCallback(async (event) => {
-		console.log(location);
 		try {
 			const res = await axios.get(
 				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
@@ -89,11 +92,11 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 			const timeoutId = setTimeout(() => {
 				locationChangedByUser.current = false;
 			}, 2000);
-	
+
 			return () => clearTimeout(timeoutId);
 		}
 	}, [locationChangedByUser]);
-	
+
 
 	useEffect(() => {
 
