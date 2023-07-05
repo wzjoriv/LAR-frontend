@@ -24,7 +24,9 @@ export default function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation) ? "locs" : "adds";
+    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation)
+      ? "locs"
+      : "adds";
     try {
       const res = await axios.get(
         `http://localhost:5000/${searchType}/${searchLocation}/${searchTargets}`
@@ -54,9 +56,12 @@ export default function SearchBar(props) {
 
   React.useEffect(
     function () {
-      if (!props.isProgrammaticMove.current){
-        setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
-      };
+      console.log(props.isProgrammaticMove.current);
+      if (!props.isProgrammaticMove.current) {
+        setSearchLocation(
+          `${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`
+        );
+      }
     },
     [props.location, props.isProgrammaticMove, setSearchLocation]
   );
