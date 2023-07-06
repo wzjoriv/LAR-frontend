@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import L from 'leaflet';
+import React, { useEffect, useRef, useCallback } from "react";
+import L from "leaflet";
 import axios from "axios";
-import './style.css';
-import renderHeatmap from './heatmap.js';
+import "./style.css";
+import renderHeatmap from "./heatmap.js";
 
-function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }) {
+function MapViewer({location, LOIResponse, setLocation, locationChangedByInteraction}) {
 	const mapRef = useRef(null);
-  const isProgrammaticMove = useRef(false);
+	const isProgrammaticMove = useRef(false);
 
 	const getLocationData = useCallback(async (event) => {
-		console.log(location);
 		try {
 			const res = await axios.get(
 				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
@@ -32,14 +31,14 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 		let bounds = mapRef.current.getBounds();
 		let center = mapRef.current.getCenter();
 
-		locationChangedByUser.current = true;
+		locationChangedByInteraction.current = true;
 		setLocation({
 			longitude: center.lng,
 			latitude: center.lat,
 			radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
 			zoom: mapRef.current.getZoom(),
 		});
-	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByUser]);
+	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
 
 	useEffect(() => {
 
@@ -76,24 +75,24 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByUser }
 			}
 		}
 
-		if (locationChangedByUser.current) {
+		if (locationChangedByInteraction.current) {
 			getLocationData().then(data => {
 				renderHeatmap(mapRef.current, data);
 			});
 		}
 
-	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByUser, isProgrammaticMove]);
+	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
 
 	useEffect(() => {
-		if (locationChangedByUser.current) {
+		if (locationChangedByInteraction.current) {
 			const timeoutId = setTimeout(() => {
-				locationChangedByUser.current = false;
+				locationChangedByInteraction.current = false;
 			}, 2000);
-	
+
 			return () => clearTimeout(timeoutId);
 		}
-	}, [locationChangedByUser]);
-	
+	}, [locationChangedByInteraction]);
+
 
 	useEffect(() => {
 
