@@ -94,6 +94,8 @@ var heatmapLayer;
 
 function renderHeatmap(map, data) {
 
+    if (!data) return;
+
     let latLngLOIs = Object.values(data.dbs).flat();
     latLngLOIs = latLngLOIs.map(entry =>
         [entry.geometry.coordinates[1], entry.geometry.coordinates[0]]
