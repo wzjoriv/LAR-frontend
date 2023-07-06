@@ -45,7 +45,7 @@ var HeatmapLayer = L.GridLayer.extend({
             return [x, y];
         });
 
-        const alphaLOIs = 500 * meterToPixelRatio; // meters
+        const alphaLOIs = 250 * meterToPixelRatio; // meters
 
         const tileCenterX = size.x / 2;
         const tileCenterY = size.y / 2;
@@ -93,6 +93,7 @@ var HeatmapLayer = L.GridLayer.extend({
 var heatmapLayer;
 
 function renderHeatmap(map, data) {
+
     let latLngLOIs = Object.values(data.dbs).flat();
     latLngLOIs = latLngLOIs.map(entry =>
         [entry.geometry.coordinates[1], entry.geometry.coordinates[0]]
