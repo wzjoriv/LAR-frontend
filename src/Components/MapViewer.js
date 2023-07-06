@@ -47,7 +47,7 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 		setLocation({
 			longitude: center.lng,
 			latitude: center.lat,
-			radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
+			radius: (center.distanceTo(bounds.getNorthWest())), //meters
 			zoom: mapRef.current.getZoom(),
 		});
 	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
