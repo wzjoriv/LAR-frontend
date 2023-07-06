@@ -2,25 +2,26 @@ import React, { useState } from "react";
 import "./style.css";
 import axios from "axios";
 import SearchBox from "./SearchBox";
-import buttons from "./buttons";
 import ToggleButton from "./ToggleButton";
 
-export default function SearchBar(props) {
-  const [searchLocation, setSearchLocation] = useState("");
-  const [buttonInfo, setButtonInfo] = useState(buttons);
-
-  function handleChange(event) {
-    setSearchLocation(event.target.value);
-  }
-
-  //`http://localhost:5000/adds/Lafayette,IN/1`
+function makeSearchTargets(buttonInfo) {
   let searchTargets = "";
   for (let i = 0; i < buttonInfo.length; i++) {
     if (buttonInfo[i].selected) {
       searchTargets = searchTargets + buttonInfo[i].id + ",";
     }
   }
-  searchTargets = searchTargets.slice(0, -1);
+  return searchTargets.slice(0, -1);
+}
+
+function SearchBar(props) {
+  const [searchLocation, setSearchLocation] = useState("");
+  function handleChange(event) {
+    setSearchLocation(event.target.value);
+  }
+
+  //`http://localhost:5000/adds/Lafayette,IN/1`
+  let searchTargets = makeSearchTargets(props.buttonInfo);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -35,7 +36,15 @@ export default function SearchBar(props) {
     }
   };
 
-  const ToggleOptions = buttonInfo.map((button) => (
+  function changeToggle(key) {
+    props.setButtonInfo((prevInfo) => {
+      return prevInfo.map((info) => {
+        return info.id === key ? { ...info, selected: !info.selected } : info;
+      });
+    });
+  }
+
+  const ToggleOptions = props.buttonInfo.map((button) => (
     <ToggleButton
       id={button.id}
       name={button.name}
@@ -44,22 +53,19 @@ export default function SearchBar(props) {
     />
   ));
 
-  function changeToggle(key) {
-    setButtonInfo((prevInfo) => {
-      return prevInfo.map((info) => {
-        return info.id === key ? { ...info, selected: !info.selected } : info;
-      });
-    });
-  }
-
   React.useEffect(() => {
-      if (props.locationChangedByUser.current) {
-        setSearchLocation(`${props.location.latitude}, ${props.location.longitude}, ${props.location.radius}`)
-      };
-      
-			props.locationChangedByUser.current = false;
-    }, [props.location, props.locationChangedByUser, setSearchLocation]
-  );
+    if (props.locationChangedByInteraction.current) {
+      let numDecimals = -1 * (11 - props.location.zoom);
+      setSearchLocation(
+        `${props.location.latitude.toFixed(
+          numDecimals
+        )},${props.location.longitude.toFixed(
+          numDecimals
+        )},${props.location.radius.toFixed(0)}`
+      );
+    }
+    props.locationChangedByInteraction.current = false;
+  }, [props.location, props.locationChangedByInteraction, setSearchLocation]);
 
   return (
     <form onSubmit={handleSubmit} className="search-bar">
@@ -73,3 +79,5 @@ export default function SearchBar(props) {
     </form>
   );
 }
+
+export { SearchBar, makeSearchTargets };
