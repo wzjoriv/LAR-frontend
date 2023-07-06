@@ -9,7 +9,6 @@ function MapViewer({location, LOIResponse, setLocation, locationChangedByInterac
 	const isProgrammaticMove = useRef(false);
 
 	const getLocationData = useCallback(async (event) => {
-		console.log(location);
 		try {
 			const res = await axios.get(
 				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
