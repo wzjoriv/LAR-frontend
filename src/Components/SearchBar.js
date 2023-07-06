@@ -59,9 +59,9 @@ function SearchBar(props) {
       setSearchLocation(
         `${props.location.latitude.toFixed(
           numDecimals
-        )}, ${props.location.longitude.toFixed(
+        )},${props.location.longitude.toFixed(
           numDecimals
-        )}, ${props.location.radius.toFixed(numDecimals)}`
+        )},${props.location.radius.toFixed(0)}`
       );
     }
     props.locationChangedByInteraction.current = false;
