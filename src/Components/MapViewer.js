@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import L from "leaflet";
 import axios from "axios";
-import "./style.css";
-import renderHeatmap from "./heatmap.js";
+import './style.css';
+import {renderHeatmap, toggleHeatmap} from './heatmap.js';
+import {makeSearchTargets} from "./SearchBar.js";
 
-function MapViewer({location, LOIResponse, setLocation, locationChangedByInteraction}) {
+function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, locationChangedByInteraction}) {
 	const mapRef = useRef(null);
 	const isProgrammaticMove = useRef(false);
 
 	const getLocationData = useCallback(async (event) => {
 		try {
+			let searchTargets = makeSearchTargets(buttonInfo);
 			const res = await axios.get(
-				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
+				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/${searchTargets}`
 			);
 
 			return res.data;

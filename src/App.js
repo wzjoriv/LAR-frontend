@@ -21,6 +21,8 @@ function App() {
         location={location}
         locationChangedByInteraction={locationChangedByInteraction}
         setLocation={setLocation}
+        buttonInfo={buttonInfo}
+        heatmapOn={heatmapOn}
         LOIResponse={LOIResponse}
       />
       <div className="App-header">
