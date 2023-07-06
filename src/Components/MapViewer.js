@@ -10,12 +10,6 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 	const isProgrammaticMove = useRef(false);
 
 	useEffect(() => {
-		getLocationData().then(data => {
-			renderHeatmap(mapRef.current, data);
-		});
-	}, [buttonInfo, mapRef]);
-
-	useEffect(() => {
 		toggleHeatmap(heatmapOn, mapRef.current)
 	}, [heatmapOn, mapRef]);
 
@@ -33,6 +27,12 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 			return null;
 		}
 	}, [location, buttonInfo]);
+
+	useEffect(() => {
+		getLocationData().then(data => {
+			renderHeatmap(mapRef.current, data);
+		});
+	}, [buttonInfo, getLocationData, mapRef]);
 
 	const handleMoveEnd = useCallback(() => {
 		if (isProgrammaticMove.current) {
