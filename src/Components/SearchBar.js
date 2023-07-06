@@ -25,10 +25,7 @@ function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(searchTargets);
-    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation)
-      ? "locs"
-      : "adds";
+    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation) ? "locs" : "adds";
     try {
       const res = await axios.get(
         `http://localhost:5000/${searchType}/${searchLocation}/${searchTargets}`
@@ -83,4 +80,4 @@ function SearchBar(props) {
   );
 }
 
-export {SearchBar, makeSearchTargets};
+export { SearchBar, makeSearchTargets };
