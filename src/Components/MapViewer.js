@@ -9,16 +9,6 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 	const mapRef = useRef(null);
 	const isProgrammaticMove = useRef(false);
 
-	useEffect(() => {
-		getLocationData().then(data => {
-			renderHeatmap(mapRef.current, data);
-		});
-	}, [buttonInfo, mapRef]);
-
-	useEffect(() => {
-		toggleHeatmap(heatmapOn, mapRef.current)
-	}, [heatmapOn, getLocationData, mapRef]);
-
 	const getLocationData = useCallback(async (event) => {
 		try {
 			let searchTargets = makeSearchTargets(buttonInfo);
@@ -33,6 +23,16 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 			return null;
 		}
 	}, [location, buttonInfo]);
+
+	useEffect(() => {
+		getLocationData().then(data => {
+			renderHeatmap(mapRef.current, data);
+		});
+	}, [buttonInfo, getLocationData, mapRef]);
+
+	useEffect(() => {
+		toggleHeatmap(heatmapOn, mapRef.current)
+	}, [heatmapOn, mapRef]);
 
 	const handleMoveEnd = useCallback(() => {
 		if (isProgrammaticMove.current) {
