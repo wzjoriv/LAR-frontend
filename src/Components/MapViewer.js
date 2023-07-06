@@ -96,7 +96,6 @@ function MapViewer({ location, LOIResponse, setLocation, locationChangedByIntera
 			return () => clearTimeout(timeoutId);
 		}
 	}, [locationChangedByInteraction]);
-	
 
 	useEffect(() => {
 
