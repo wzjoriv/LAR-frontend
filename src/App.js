@@ -17,9 +17,23 @@ function App() {
 
   return (
     <div className="App">
-      <MapViewer location={location} locationChangedByInteraction={locationChangedByInteraction} heatmapOn={heatmapOn} setLocation={setLocation} LOIResponse={LOIResponse}/>
-      <div className='App-header'>
-        <SearchBar location={location} locationChangedByInteraction={locationChangedByInteraction} setHeatmapOn={setHeatmapOn} setLOIResponse={setLOIResponse} />
+      <MapViewer
+        location={location}
+        locationChangedByInteraction={locationChangedByInteraction}
+        setLocation={setLocation}
+        buttonInfo={buttonInfo}
+        heatmapOn={heatmapOn}
+        LOIResponse={LOIResponse}
+      />
+      <div className="App-header">
+        <SearchBar
+          buttonInfo={buttonInfo}
+          setButtonInfo={setButtonInfo}
+          setHeatmapOn={setHeatmapOn}
+          location={location}
+          locationChangedByInteraction={locationChangedByInteraction}
+          setLOIResponse={setLOIResponse}
+        />
       </div>
     </div>
   );
