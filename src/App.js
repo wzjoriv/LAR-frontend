@@ -1,6 +1,6 @@
 import "./App.css";
 import MapViewer from "./Components/MapViewer";
-import SearchBar from "./Components/SearchBar";
+import { SearchBar } from './Components/SearchBar';
 import React, { useState, useRef } from "react";
 import buttons from "./Components/buttons.js";
 
