@@ -11,7 +11,7 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 
 	useEffect(() => {
 		toggleHeatmap(heatmapOn, mapRef.current)
-	}, [heatmapOn, mapRef]);
+	}, [heatmapOn, getLocationData, mapRef]);
 
 	const getLocationData = useCallback(async (event) => {
 		try {
