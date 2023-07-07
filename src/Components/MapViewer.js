@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useCallback } from "react";
 import L from "leaflet";
 import axios from "axios";
 import './style.css';
-import {renderHeatmap, toggleHeatmap} from './heatmap.js';
-import {makeSearchTargets} from "./SearchBar.js";
+import { renderHeatmap, toggleHeatmap } from './heatmap.js';
+import { makeSearchTargets } from "./SearchBar.js";
 
-function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, locationChangedByInteraction}) {
+function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, locationChangedByInteraction }) {
 	const mapRef = useRef(null);
 	const isProgrammaticMove = useRef(false);
 
@@ -17,7 +17,7 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 		try {
 			let searchTargets = makeSearchTargets(buttonInfo);
 			const res = await axios.get(
-				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/${searchTargets}`
+				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius + 500}/${searchTargets}`
 			);
 
 			return res.data;
@@ -29,10 +29,13 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 	}, [location, buttonInfo]);
 
 	useEffect(() => {
+
+		if (!heatmapOn) return;
+
 		getLocationData().then(data => {
 			renderHeatmap(mapRef.current, data);
 		});
-	}, [buttonInfo, getLocationData, mapRef]);
+	}, [buttonInfo, heatmapOn, getLocationData, mapRef]);
 
 	const handleMoveEnd = useCallback(() => {
 		if (isProgrammaticMove.current) {
@@ -87,13 +90,13 @@ function MapViewer({location, LOIResponse, heatmapOn, buttonInfo, setLocation, l
 			}
 		}
 
-		if (locationChangedByInteraction.current) {
+		if (locationChangedByInteraction.current && heatmapOn) {
 			getLocationData().then(data => {
 				renderHeatmap(mapRef.current, data);
 			});
 		}
 
-	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
+	}, [location, heatmapOn, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
 
 	useEffect(() => {
 		if (locationChangedByInteraction.current) {

@@ -28,16 +28,18 @@ function App() {
         LOIResponse={LOIResponse}
       />
       <div className="App-header">
-        <SearchBar
-          className="searchBar"
-          buttonInfo={buttonInfo}
-          setButtonInfo={setButtonInfo}
-          setHeatmapOn={setHeatmapOn}
-          location={location}
-          locationChangedByInteraction={locationChangedByInteraction}
-          setLOIResponse={setLOIResponse}
-        />
-        <HeatmapToggle on={heatmapOn} setHeatmapOn={setHeatmapOn} />
+        <div className="Nav-bar">
+          <SearchBar
+            buttonInfo={buttonInfo}
+            setButtonInfo={setButtonInfo}
+            setHeatmapOn={setHeatmapOn}
+            heatmapOn={heatmapOn}
+            location={location}
+            locationChangedByInteraction={locationChangedByInteraction}
+            setLOIResponse={setLOIResponse}
+          />
+          <HeatmapToggle on={heatmapOn} setHeatmapOn={setHeatmapOn} />
+        </div>
       </div>
     </div>
   );
