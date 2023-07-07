@@ -117,6 +117,7 @@ function renderHeatmap(map, data) {
 function toggleHeatmap(toggle, map){
     if (!heatmapLayer) return;
 
+    
     heatmapLayer.removeFrom(map);
     if (toggle) heatmapLayer.addTo(map);
 }

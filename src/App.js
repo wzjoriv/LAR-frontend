@@ -33,6 +33,7 @@ function App() {
           buttonInfo={buttonInfo}
           setButtonInfo={setButtonInfo}
           setHeatmapOn={setHeatmapOn}
+          heatmapOn={heatmapOn}
           location={location}
           locationChangedByInteraction={locationChangedByInteraction}
           setLOIResponse={setLOIResponse}
