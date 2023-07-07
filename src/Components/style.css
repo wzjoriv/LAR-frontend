@@ -71,3 +71,8 @@
   padding: 0;
   margin: 0;
 }
+
+.heatmapToggle {
+  pointer-events: all;
+  cursor: pointer;
+}
