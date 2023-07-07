@@ -29,6 +29,7 @@ function App() {
       />
       <div className="App-header">
         <SearchBar
+          className="searchBar"
           buttonInfo={buttonInfo}
           setButtonInfo={setButtonInfo}
           location={location}
@@ -42,3 +43,5 @@ function App() {
 }
 
 export default App;
+
+//idea: make app header the flex container with searchbar and heatmaptoggle
