@@ -5,7 +5,10 @@
 }
 
 .App-header {
-  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
   margin: 0;
   position: absolute;
   pointer-events: none;
