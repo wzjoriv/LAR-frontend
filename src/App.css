@@ -16,3 +16,8 @@
   font-size: calc(10px + 2vmin);
   color: rgb(33, 33, 33);
 }
+
+.Nav-bar{
+  display: flex;
+  flex-direction: row;
+}
