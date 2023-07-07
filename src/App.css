@@ -6,10 +6,16 @@
 
 .App-header {
   height: 100%;
+  width: 100%;
   margin: 0;
   position: absolute;
   pointer-events: none;
   z-index: 1000;
   font-size: calc(10px + 2vmin);
   color: rgb(33, 33, 33);
+}
+
+.Nav-bar{
+  display: flex;
+  flex-direction: row;
 }

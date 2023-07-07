@@ -17,7 +17,7 @@ function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, 
 		try {
 			let searchTargets = makeSearchTargets(buttonInfo);
 			const res = await axios.get(
-				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/${searchTargets}`
+				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius + 500}/${searchTargets}`
 			);
 
 			return res.data;

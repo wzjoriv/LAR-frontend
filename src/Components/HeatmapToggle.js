@@ -6,7 +6,7 @@ export default function HeatmapToggle(props) {
     backgroundColor: props.on ? "Gray" : "white",
     color: props.on ? "white" : "black",
   };
-  const text = props.on ? "Remove Heatmap" : "Display Heatmap";
+  const text = props.on ? "❌" : "🔥";
 
   return (
     <button
