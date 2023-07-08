@@ -5,6 +5,21 @@ import './style.css';
 import { renderHeatmap, toggleHeatmap } from './heatmap.js';
 import { makeSearchTargets } from "./SearchBar.js";
 
+async function getLocationData(location, buttonInfo) {
+	try {
+		let searchTargets = makeSearchTargets(buttonInfo);
+		const res = await axios.get(
+			`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius + 500}/${searchTargets}`
+		);
+
+		return res.data;
+	} catch (error) {
+		console.error(error);
+
+		return null;
+	}
+}
+
 function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, locationChangedByInteraction }) {
 	const mapRef = useRef(null);
 	const isProgrammaticMove = useRef(false);
@@ -13,29 +28,14 @@ function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, 
 		toggleHeatmap(heatmapOn, mapRef.current)
 	}, [heatmapOn, mapRef]);
 
-	const getLocationData = useCallback(async (event) => {
-		try {
-			let searchTargets = makeSearchTargets(buttonInfo);
-			const res = await axios.get(
-				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius + 500}/${searchTargets}`
-			);
-
-			return res.data;
-		} catch (error) {
-			console.error(error);
-
-			return null;
-		}
-	}, [location, buttonInfo]);
-
 	useEffect(() => {
-
 		if (!heatmapOn) return;
 
-		getLocationData().then(data => {
+		getLocationData(location, buttonInfo).then(data => {
 			renderHeatmap(mapRef.current, data);
 		});
-	}, [buttonInfo, heatmapOn, getLocationData, mapRef]);
+		// eslint-disable-next-line
+	}, [buttonInfo, heatmapOn, mapRef]);
 
 	const handleMoveEnd = useCallback(() => {
 		if (isProgrammaticMove.current) {
@@ -91,12 +91,12 @@ function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, 
 		}
 
 		if (locationChangedByInteraction.current && heatmapOn) {
-			getLocationData().then(data => {
+			getLocationData(location, buttonInfo).then(data => {
 				renderHeatmap(mapRef.current, data);
 			});
 		}
 
-	}, [location, heatmapOn, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
+	}, [location, heatmapOn, buttonInfo, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
 
 	useEffect(() => {
 		if (locationChangedByInteraction.current) {
