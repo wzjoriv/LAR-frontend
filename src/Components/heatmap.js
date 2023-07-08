@@ -26,23 +26,18 @@ var HeatmapLayer = L.GridLayer.extend({
             return L.DomUtil.create('div');
         }
 
-        // create a <canvas> element for drawing
         var tile = L.DomUtil.create('canvas', 'leaflet-tile');
-        // setup tile width and height according to the options
         var size = this.getTileSize();
         tile.width = size.x;
         tile.height = size.y;
-        // get a canvas context and draw something on it using coords.x, coords.y and coords.z
         var ctx = tile.getContext('2d');
         
-        // set global alpha value
         ctx.globalAlpha = this.opacity;
 
         const centerPoint = this._map.latLngToContainerPoint(this._map.getCenter());
         const point2 = this._map.containerPointToLatLng(centerPoint.add(L.point(1, 0)));
         const meterToPixelRatio = 1 / this._map.distance(this._map.getCenter(), point2);
         
-        // convert latLngLOIs to pixel coordinates
         const pixelLOIs = this.data.map(latLng => {
             let point = this._map.project(L.latLng(latLng), coords.z);
             let x = point.x - (coords.x * size.x);
@@ -50,7 +45,7 @@ var HeatmapLayer = L.GridLayer.extend({
             return [x, y];
         });
 
-        const alphaLOIs = 500 * meterToPixelRatio; // meters
+        const alphaLOIs = 250 * meterToPixelRatio; // meters
 
         const tileCenterX = size.x / 2;
         const tileCenterY = size.y / 2;
@@ -65,33 +60,28 @@ var HeatmapLayer = L.GridLayer.extend({
             return distanceSquared < threshold * threshold;
         });
         
-        // draw heatmap using data from LOIResponse or data
         var imagedata = ctx.createImageData(size.x, size.y);
         
-        // draw heatmap using data from LOIResponse or data
         for (var x=0; x<size.x; x++) {
             for (var y=0; y<size.y; y++) {
-                // Get the pixel index
                 var pixelindex = (y * size.x + x) * 4;
 
                 let intensity = heatmapIntensity(x, y, filteredPixelLOIs, alphaLOIs);
                 
-                // Interpolate between dark grey/black and blue
-                let red   = intensity * 0 + (1 - intensity) * 64;
-                let green = intensity * 0 + (1 - intensity) * 64;
-                let blue  = intensity * 255 + (1 - intensity) * 64;
+                let red   = intensity * 255 + (1 - intensity) * 0;
+                let green = intensity * 0 + (1 - intensity) * 255;
+                let blue  = intensity * 0 + (1 - intensity) * 0;
+                let alpha = intensity * 255 + (1 - intensity) * 150;
                 
-                // Set the pixel data
                 imagedata.data[pixelindex]   = red;   // Red
                 imagedata.data[pixelindex+1] = green; // Green
                 imagedata.data[pixelindex+2] = blue;  // Blue
-                imagedata.data[pixelindex+3] = 255;   // Alpha
+                imagedata.data[pixelindex+3] = alpha;   // Alpha
             }
         }
 
         ctx.putImageData(imagedata, 0, 0);
         
-        // return the tile so it can be rendered on screen
         return tile;
     },
     setData: function(data) {
@@ -103,7 +93,9 @@ var HeatmapLayer = L.GridLayer.extend({
 var heatmapLayer;
 
 function renderHeatmap(map, data) {
-    console.log("Render");
+
+    if (!data) return;
+
     let latLngLOIs = Object.values(data.dbs).flat();
     latLngLOIs = latLngLOIs.map(entry =>
         [entry.geometry.coordinates[1], entry.geometry.coordinates[0]]
@@ -122,4 +114,12 @@ function renderHeatmap(map, data) {
     }
 }
 
-export default renderHeatmap;
+function toggleHeatmap(toggle, map){
+    if (!heatmapLayer) return;
+
+    
+    heatmapLayer.removeFrom(map);
+    if (toggle) heatmapLayer.addTo(map);
+}
+
+export {renderHeatmap, toggleHeatmap};

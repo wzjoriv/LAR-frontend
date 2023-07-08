@@ -25,6 +25,8 @@ function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if(!props.heatmapOn) props.setHeatmapOn(true);
+
     let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation) ? "locs" : "adds";
     try {
       const res = await axios.get(

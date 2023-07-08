@@ -1,26 +1,41 @@
 import React, { useEffect, useRef, useCallback } from "react";
 import L from "leaflet";
 import axios from "axios";
-import "./style.css";
-import renderHeatmap from "./heatmap.js";
+import './style.css';
+import { renderHeatmap, toggleHeatmap } from './heatmap.js';
+import { makeSearchTargets } from "./SearchBar.js";
 
-function MapViewer({location, LOIResponse, setLocation, locationChangedByInteraction}) {
+async function getLocationData(location, buttonInfo) {
+	try {
+		let searchTargets = makeSearchTargets(buttonInfo);
+		const res = await axios.get(
+			`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius + 500}/${searchTargets}`
+		);
+
+		return res.data;
+	} catch (error) {
+		console.error(error);
+
+		return null;
+	}
+}
+
+function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, locationChangedByInteraction }) {
 	const mapRef = useRef(null);
 	const isProgrammaticMove = useRef(false);
 
-	const getLocationData = useCallback(async (event) => {
-		try {
-			const res = await axios.get(
-				`http://localhost:5000/locs/${location.latitude},${location.longitude},${location.radius}/1,2`
-			);
+	useEffect(() => {
+		toggleHeatmap(heatmapOn, mapRef.current)
+	}, [heatmapOn, mapRef]);
 
-			return res.data;
-		} catch (error) {
-			console.error(error);
+	useEffect(() => {
+		if (!heatmapOn) return;
 
-			return null;
-		}
-	}, [location]);
+		getLocationData(location, buttonInfo).then(data => {
+			renderHeatmap(mapRef.current, data);
+		});
+		// eslint-disable-next-line
+	}, [buttonInfo, heatmapOn, mapRef]);
 
 	const handleMoveEnd = useCallback(() => {
 		if (isProgrammaticMove.current) {
@@ -35,7 +50,7 @@ function MapViewer({location, LOIResponse, setLocation, locationChangedByInterac
 		setLocation({
 			longitude: center.lng,
 			latitude: center.lat,
-			radius: (center.distanceTo(bounds.getNorthWest())) / 2 + 1000, //meters
+			radius: (center.distanceTo(bounds.getNorthWest())), //meters
 			zoom: mapRef.current.getZoom(),
 		});
 	}, [setLocation, isProgrammaticMove, mapRef, locationChangedByInteraction]);
@@ -75,13 +90,13 @@ function MapViewer({location, LOIResponse, setLocation, locationChangedByInterac
 			}
 		}
 
-		if (locationChangedByInteraction.current) {
-			getLocationData().then(data => {
+		if (locationChangedByInteraction.current && heatmapOn) {
+			getLocationData(location, buttonInfo).then(data => {
 				renderHeatmap(mapRef.current, data);
 			});
 		}
 
-	}, [location, getLocationData, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
+	}, [location, heatmapOn, buttonInfo, handleMoveEnd, mapRef, locationChangedByInteraction, isProgrammaticMove]);
 
 	useEffect(() => {
 		if (locationChangedByInteraction.current) {
@@ -92,7 +107,6 @@ function MapViewer({location, LOIResponse, setLocation, locationChangedByInterac
 			return () => clearTimeout(timeoutId);
 		}
 	}, [locationChangedByInteraction]);
-
 
 	useEffect(() => {
 
