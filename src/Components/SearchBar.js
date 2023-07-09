@@ -25,7 +25,7 @@ function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if(!props.heatmapOn) props.setHeatmapOn(true);
+    if (!props.heatmapOn) props.setHeatmapOn(true);
 
     let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation) ? "locs" : "adds";
     try {
@@ -48,6 +48,7 @@ function SearchBar(props) {
 
   const ToggleOptions = props.buttonInfo.map((button) => (
     <ToggleButton
+      key={button.id}
       id={button.id}
       name={button.name}
       selected={button.selected}
