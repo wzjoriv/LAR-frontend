@@ -127,7 +127,9 @@ function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, 
 				radius: LOIResponse.search.radius, //meters
 				zoom: mapRef.current.getBoundsZoom(bounds)
 			});
-			renderHeatmap(mapRef.current, LOIResponse);
+			setTimeout(() => {
+				renderHeatmap(mapRef.current, LOIResponse);
+			}, 1000);
 		}
 
 	}, [LOIResponse, setLocation, mapRef, isProgrammaticMove]);
