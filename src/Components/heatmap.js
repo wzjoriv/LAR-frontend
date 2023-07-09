@@ -51,7 +51,7 @@ var HeatmapLayer = L.GridLayer.extend({
         const tileCenterY = size.y / 2;
 
         
-        const threshold = Math.max(tileCenterX * 5, alphaLOIs * 5);
+        const threshold = Math.max(size.x, alphaLOIs * 3);
 
         const filteredPixelLOIs = pixelLOIs.filter(pixelLOI => {
             let dx = tileCenterX - pixelLOI[0];
