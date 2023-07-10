@@ -7,12 +7,17 @@
 .App-header {
   height: 100%;
   width: 100%;
+  align-items: center;
   margin: 0;
   position: absolute;
   pointer-events: none;
   z-index: 1000;
   font-size: calc(10px + 2vmin);
   color: rgb(33, 33, 33);
+}
+
+.App-header > * {
+  pointer-events: all;
 }
 
 .Nav-bar{
