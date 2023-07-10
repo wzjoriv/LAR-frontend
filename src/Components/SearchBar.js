@@ -16,11 +16,7 @@ function makeSearchTargets(buttonInfo) {
 
 function SearchBar(props) {
   const [searchLocation, setSearchLocation] = useState("");
-  function handleChange(event) {
-    setSearchLocation(event.target.value);
-  }
-
-  //`http://localhost:5000/adds/Lafayette,IN/1`
+  const [searchPlaceholder, setSearchPlaceholder] = useState("Lafayette, IN");
   let searchTargets = makeSearchTargets(props.buttonInfo);
 
   const handleSubmit = async (event) => {
@@ -37,7 +33,9 @@ function SearchBar(props) {
       props.setLOIResponse(res.data);
     } catch (error) {
       console.error(error);
+      return;
     }
+    setSearchPlaceholder(searchLocation);
   };
 
   function changeToggle(key) {
@@ -87,8 +85,7 @@ function SearchBar(props) {
       <SearchBox
         searchLocation={searchLocation}
         setSearchLocation={setSearchLocation}
-        handleChange={handleChange}
-        changeToggle={changeToggle}
+        placeholder={searchPlaceholder}
       />
       {ToggleOptions}
     </form>
