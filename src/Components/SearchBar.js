@@ -45,7 +45,7 @@ function SearchBar(props) {
       }
     }
     if (isOnlyOneSelected) {
-      alert("You must have at least one entity of interest selected.");
+      alert("You must have at least one LOI selected.");
     } else {
       props.setButtonInfo((prevInfo) => {
         return prevInfo.map((info) => {
