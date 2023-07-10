@@ -21,9 +21,7 @@ function SearchBar(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setSearchPlaceholder(searchLocation);
     if (!props.heatmapOn) props.setHeatmapOn(true);
-
     let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation)
       ? "locs"
       : "adds";
@@ -34,7 +32,9 @@ function SearchBar(props) {
       props.setLOIResponse(res.data);
     } catch (error) {
       console.error(error);
+      return;
     }
+    setSearchPlaceholder(searchLocation);
   };
 
   function changeToggle(key) {
