@@ -24,7 +24,7 @@ export default function SearchBox(props) {
         placeholder={props.placeholder}
         title="Enter the location of interest"
       />
-      <button type="button" onClick={props.handleSubmit}>🔍</button>
+      <button>🔍</button>
     </div>
   );
 }
