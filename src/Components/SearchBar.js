@@ -16,18 +16,17 @@ function makeSearchTargets(buttonInfo) {
 
 function SearchBar(props) {
   const [searchLocation, setSearchLocation] = useState("");
-  function handleChange(event) {
-    setSearchLocation(event.target.value);
-  }
-
-  //`http://localhost:5000/adds/Lafayette,IN/1`
+  const [searchPlaceholder, setSearchPlaceholder] = useState("Lafayette, IN");
   let searchTargets = makeSearchTargets(props.buttonInfo);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setSearchPlaceholder(searchLocation);
     if (!props.heatmapOn) props.setHeatmapOn(true);
 
-    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation) ? "locs" : "adds";
+    let searchType = /[\d.]+\W+[\d.]+\W+[\d.]+/.test(searchLocation)
+      ? "locs"
+      : "adds";
     try {
       const res = await axios.get(
         `http://localhost:5000/${searchType}/${searchLocation}/${searchTargets}`
@@ -75,8 +74,7 @@ function SearchBar(props) {
       <SearchBox
         searchLocation={searchLocation}
         setSearchLocation={setSearchLocation}
-        handleChange={handleChange}
-        changeToggle={changeToggle}
+        placeholder={searchPlaceholder}
       />
       {ToggleOptions}
     </form>
