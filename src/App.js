@@ -4,6 +4,7 @@ import { SearchBar } from "./Components/SearchBar";
 import React, { useState, useRef } from "react";
 import buttons from "./Components/buttons.js";
 import HeatmapToggle from "./Components/HeatmapToggle";
+import LogoFootnote from "./Components/LogoFootnote";
 
 function App() {
   const [location, setLocation] = useState({
@@ -40,11 +41,11 @@ function App() {
           />
           <HeatmapToggle on={heatmapOn} setHeatmapOn={setHeatmapOn} />
         </div>
+
+        <LogoFootnote />
       </div>
     </div>
   );
 }
 
 export default App;
-
-//idea: make app header the flex container with searchbar and heatmaptoggle
