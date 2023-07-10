@@ -108,7 +108,6 @@ function MapViewer({ location, LOIResponse, heatmapOn, buttonInfo, setLocation, 
 		}
 	}, [locationChangedByInteraction]);
 
-
 	useEffect(() => {
 
 		if (LOIResponse) {
