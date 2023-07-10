@@ -38,11 +38,21 @@ function SearchBar(props) {
   };
 
   function changeToggle(key) {
-    props.setButtonInfo((prevInfo) => {
-      return prevInfo.map((info) => {
-        return info.id === key ? { ...info, selected: !info.selected } : info;
+    let isOnlyOneSelected = true;
+    for (let i = 0; i < props.buttonInfo.length; i++) {
+      if (props.buttonInfo[i].selected && i !== key) {
+        isOnlyOneSelected = false;
+      }
+    }
+    if (isOnlyOneSelected) {
+      alert("You must have at least one entity of interest selected.");
+    } else {
+      props.setButtonInfo((prevInfo) => {
+        return prevInfo.map((info) => {
+          return info.id === key ? { ...info, selected: !info.selected } : info;
+        });
       });
-    });
+    }
   }
 
   const ToggleOptions = props.buttonInfo.map((button) => (
