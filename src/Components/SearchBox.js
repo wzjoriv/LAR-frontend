@@ -8,6 +8,7 @@ export default function SearchBox(props) {
 
   function handleKeyPress(event) {
     if (event.keyCode === 9) {
+      event.preventDefault();
       props.setSearchLocation(props.placeholder);
     }
   }
