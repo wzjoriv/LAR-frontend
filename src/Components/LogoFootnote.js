@@ -20,7 +20,7 @@ function LogoFootnote() {
           </div>
           <div>
             <p className="author-name">Pruthvi S. Patel</p>
-            <p className="author-role">Frontend Developer (Undergraduate)</p>
+            <p className="author-role">Assistant Developer (Undergraduate)</p>
           </div>
           <div>
             <p className="author-name">Richard Donbosco</p>
