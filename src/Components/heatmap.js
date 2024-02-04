@@ -1,12 +1,13 @@
 import L from 'leaflet';
 
-function heatmapIntensity(x, y, pixelLOIs, alphaLOIs) {
+function heatmapIntensity(x, y, pixelLOIs, decayLOIs) {
     let maxIntensity = 0;
     for (let i = 0; i < pixelLOIs.length; i++) {
         let dx = x - pixelLOIs[i][0];
         let dy = y - pixelLOIs[i][1];
         let distanceSquared = dx * dx + dy * dy;
-        let intensity = Math.exp(-distanceSquared / (alphaLOIs * alphaLOIs));
+        let intensity = Math.exp(-distanceSquared / (decayLOIs * decayLOIs));
+
         maxIntensity = Math.max(maxIntensity, intensity);
     }
     return maxIntensity;
@@ -38,25 +39,25 @@ var HeatmapLayer = L.GridLayer.extend({
         const point2 = this._map.containerPointToLatLng(centerPoint.add(L.point(1, 0)));
         const meterToPixelRatio = 1 / this._map.distance(this._map.getCenter(), point2);
         
-        const pixelLOIs = this.data.map(latLng => {
-            let point = this._map.project(L.latLng(latLng), coords.z);
+        const pixelLOIs = this.data.map(loi => {
+            let point = this._map.project(L.latLng(loi.slice(0, 2)), coords.z);
             let x = point.x - (coords.x * size.x);
             let y = point.y - (coords.y * size.y);
-            return [x, y];
+            return [x, y, loi[2], loi[3]];
         });
 
-        const alphaLOIs = 250 * meterToPixelRatio; // meters
+        const decayLOIs = 250 ; // meters
 
         const tileCenterX = size.x / 2;
         const tileCenterY = size.y / 2;
-
-        
-        const threshold = Math.max(size.x, alphaLOIs * 3);
 
         const filteredPixelLOIs = pixelLOIs.filter(pixelLOI => {
             let dx = tileCenterX - pixelLOI[0];
             let dy = tileCenterY - pixelLOI[1];
             let distanceSquared = dx * dx + dy * dy;
+            
+            let decay = pixelLOI[3] * meterToPixelRatio;
+            let threshold = Math.max(size.x, decayLOIs * meterToPixelRatio * 3);
             return distanceSquared < threshold * threshold;
         });
         
@@ -66,7 +67,7 @@ var HeatmapLayer = L.GridLayer.extend({
             for (var y=0; y<size.y; y++) {
                 var pixelindex = (y * size.x + x) * 4;
 
-                let intensity = heatmapIntensity(x, y, filteredPixelLOIs, alphaLOIs);
+                let intensity = heatmapIntensity(x, y, filteredPixelLOIs, decayLOIs);
                 
                 let red   = intensity * 255 + (1 - intensity) * 0;
                 let green = intensity * 0 + (1 - intensity) * 255;
@@ -98,7 +99,7 @@ function renderHeatmap(map, data) {
 
     let latLngLOIs = Object.values(data.dbs).flat();
     latLngLOIs = latLngLOIs.map(entry =>
-        [entry.geometry.coordinates[1], entry.geometry.coordinates[0]]
+        [entry.geometry.coordinates[1], entry.geometry.coordinates[0], entry.geometry.type, entry.geometry.decay]
     );
     
     if (!heatmapLayer) {
